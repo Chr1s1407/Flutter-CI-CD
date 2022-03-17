@@ -65,10 +65,6 @@ jobs:
 
 
   build-macos:
-    if: |
-      ${{ env.BUILD_IOS == 'true' 
-        || env.BUILD_MACOS == 'true' 
-        }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -99,7 +95,6 @@ jobs:
           flutter build macos
 
   build-windows:
-    if: ${{ env.BUILD_WINDOWS == 'true' }}
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
