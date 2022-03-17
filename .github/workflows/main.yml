@@ -59,7 +59,7 @@ jobs:
       - name: Archive Web Production Artifact
         if: ${{ env.BUILD_WEB == 'true'}}
         uses: actions/upload-artifact@master
-          with:
+        with:
             name: web
             path: build/web
 
