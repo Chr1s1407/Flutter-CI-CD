@@ -117,7 +117,7 @@ jobs:
             flutter build linux
 
   release:
-    needs: [build, archive]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - name: Release Apps
