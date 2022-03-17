@@ -110,22 +110,22 @@ jobs:
             flutter build linux
 
   archive:
-    if: ${{ env.BUILD_WEB == true}}
     needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Archive Production Artifact (WEB)
+        if: ${{ env.BUILD_WEB == true}}
         uses: actions/upload-artifact@master
         with:
           name: web
           path: build/web
 
   release:
-    if: ${{ env.RELEASE == true}}
     needs: [build, archive]
     runs-on: ubuntu-latest
     steps:
       - name: Release Apps
+        if: ${{ env.RELEASE == true}}
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
