@@ -110,17 +110,24 @@ jobs:
             flutter build linux
 
   archive:
-    - name: Archive Production Artifact (WEB)
-      if: $BUILD_WEB
-      uses: actions/upload-artifact@master
-      with:
-        name: web
-        path: build/web
+    if: $BUILD_WEB
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Archive Production Artifact (WEB)
+        uses: actions/upload-artifact@master
+        with:
+          name: web
+          path: build/web
 
   release:
-    - name: Release Apps
-      if: $RELEASE
-      uses: ncipollo/release-action@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: 'build/app/outputs/**/*.apk,build/ios/iphoneos/app.ipa,build/web/web-app.zip'
+    if: $RELEASE
+    needs: [build, archive]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release Apps
+        if: $RELEASE
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: 'build/app/outputs/**/*.apk,build/ios/iphoneos/app.ipa,build/web/web-app.zip'
