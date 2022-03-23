@@ -49,12 +49,23 @@ jobs:
         if: ${{ env.BUILD_ANDROID == 'true'}}
         run: flutter build appbundle
 
+      - name: Sign Android Appbundle
+        if: ${{ env.BUILD_ANDROID == 'true'}}
+        id: android_sign
+        uses: r0adkill/sign-android-release@v1
+        with:
+          releaseDirectory: build/app/ouputs/bundle/release
+          signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
+          alias: ${{ secrets.ANDROID_ALIAS }}
+          keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
       - name: Archive Android Production Artifact
         if: ${{ env.BUILD_ANDROID == 'true'}}
         uses: actions/upload-artifact@master
         with:
             name: android
-            path: build/app/outputs/**/*.aab
+            path: ${{ steps.android_sign.outputs.signedReleaseFile }}
 
       - name: Build Web
         if: ${{ env.BUILD_WEB == 'true'}}
