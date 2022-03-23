@@ -26,6 +26,9 @@ jobs:
           cache: $env.CACHE_FLUTTER
       - run: flutter --version # print flutter version
 
+      - name: Clean
+        run: flutter clean
+
       - name: Install Packages / Dependencies
         run: flutter pub get
 
@@ -34,9 +37,6 @@ jobs:
 
       - name: Run tests including coverage
         run: flutter test --no-pub --coverage test
-
-      - name: Clean up
-        run: flutter clean
 
       - name: Build Linux
         if: ${{ env.BUILD_LINUX == 'true'}}
