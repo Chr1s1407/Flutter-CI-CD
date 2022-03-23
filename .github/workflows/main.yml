@@ -128,7 +128,7 @@ jobs:
         run: |
           flutter config --enable-windows-desktop
           flutter build windows
-       continue-on-error: true
+        continue-on-error: true
       # TODO: Archive Windows
 
 
