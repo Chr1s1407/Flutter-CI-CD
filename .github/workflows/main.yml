@@ -50,7 +50,7 @@ jobs:
 
       - name: Build Android Appbundle
         if: ${{ env.BUILD_ANDROID == 'true'}}
-        run: flutter build appbundle --release --no-pub
+        run: flutter build apk --release --no-pub
 
       - name: Sign Android Appbundle
         if: ${{ env.BUILD_ANDROID == 'true'}}
