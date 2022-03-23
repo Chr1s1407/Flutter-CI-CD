@@ -35,6 +35,9 @@ jobs:
       - name: Run tests including coverage
         run: flutter test --no-pub --coverage test
 
+      - name: Clean up
+        run: flutter clean
+
       - name: Build Linux
         if: ${{ env.BUILD_LINUX == 'true'}}
         run: |
