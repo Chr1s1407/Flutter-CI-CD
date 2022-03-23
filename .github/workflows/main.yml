@@ -51,7 +51,7 @@ jobs:
       - name: Archive Android Production Artifact
         if: ${{ env.BUILD_ANDROID == 'true'}}
         uses: actions/upload-artifact@master
-          with:
+        with:
             name: android
             path: build/app/outputs/**/*.aab
 
