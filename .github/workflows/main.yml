@@ -52,7 +52,7 @@ jobs:
       - name: Sign Android Appbundle
         if: ${{ env.BUILD_ANDROID == 'true'}}
         id: android_sign
-        uses: r0adkill/sign-android-release@v1
+        uses: r0adkll/sign-android-release@v1
         with:
           releaseDirectory: build/app/ouputs/bundle/release
           signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
