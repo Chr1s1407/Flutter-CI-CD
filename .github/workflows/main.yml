@@ -8,8 +8,8 @@ on:
 env:
   CACHE_FLUTTER: true # specify whether flutter should be cached or not
   BUILD_ANDROID: true # specify whether an android appbundle should be build or should be skipped
-  BUILD_IOS: true
-  BUILD_WEB: true
+  BUILD_IOS: false
+  BUILD_WEB: false
   BUILD_WINDOWS: false
   BUILD_LINUX: false
   BUILD_MACOS: false
@@ -47,7 +47,7 @@ jobs:
 
       - name: Build Android Appbundle
         if: ${{ env.BUILD_ANDROID == 'true'}}
-        run: flutter build appbundle
+        run: flutter build appbundle --release
 
       - name: Sign Android Appbundle
         if: ${{ env.BUILD_ANDROID == 'true'}}
