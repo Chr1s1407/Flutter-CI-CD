@@ -83,6 +83,7 @@ jobs:
 
 
   build-macos:
+    if: false
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -122,6 +123,7 @@ jobs:
       # TODO: Archive MacOS
 
   build-windows:
+    if: false
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
@@ -144,6 +146,7 @@ jobs:
 
 
   release:
+    if: false
     needs: [build-macos, build-linux, build-windows]
     runs-on: ubuntu-latest
     steps:
