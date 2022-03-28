@@ -57,6 +57,27 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    flavorDimensions "app"
+
+    productFlavors {
+        app1 {
+            dimension "app"
+            resValue "string", "app_name", "Demo App Flavor1"
+            versionNameSuffix "-App1"
+            applicationId "com.example.myapp.app1"
+        }
+        app2 {
+            dimension "app"
+            resValue "string", "app_name", "Demo App Flavor2"
+            versionNameSuffix "-App2"
+            applicationId "com.example.myapp.app2"
+        }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+    }
 }
 
 flutter {
