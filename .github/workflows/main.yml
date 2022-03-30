@@ -8,7 +8,7 @@ on:
 env:
   CACHE_FLUTTER: true # specify whether flutter should be cached or not
   BUILD_ANDROID: true # specify whether an android appbundle should be build or should be skipped
-  BUILD_IOS: false
+  BUILD_IOS: true
   BUILD_WEB: false
   BUILD_WINDOWS: false
   BUILD_LINUX: false
@@ -86,7 +86,7 @@ jobs:
 
 
   build-macos:
-    if: false
+    if: true
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -102,7 +102,7 @@ jobs:
       - name: Build iOS App
         if: ${{ env.BUILD_IOS == 'true'}}
         run: |
-            flutter build ios --no-codesign
+            flutter build ios --no-codesign --flavor app1
             cd build/ios/iphoneos
             mkdir Payload
             cd Payload
