@@ -50,7 +50,7 @@ jobs:
 
       - name: Build Android Appbundle
         if: ${{ env.BUILD_ANDROID == 'true'}}
-        run: flutter build apk --flavor app1 --release --no-pub
+        run: flutter build apk --flavor app3 --release --no-pub
 
       - name: Sign Android Appbundle
         if: ${{ env.BUILD_ANDROID == 'true'}}
@@ -102,7 +102,7 @@ jobs:
       - name: Build iOS App
         if: ${{ env.BUILD_IOS == 'true'}}
         run: |
-            flutter build ios --no-codesign --flavor app1
+            flutter build ios --no-codesign --flavor app3
             cd build/ios/iphoneos
             mkdir Payload
             cd Payload
