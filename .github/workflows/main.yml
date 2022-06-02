@@ -35,6 +35,7 @@ jobs:
         run: flutter test --no-pub --coverage test
 
   build-android:
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -69,7 +70,8 @@ jobs:
             name: android
             path: ${{ steps.android_sign.outputs.signedReleaseFile }}
 
-  build-macos:
+  build-ios:
+    needs: [test]
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
