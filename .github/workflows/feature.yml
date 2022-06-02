@@ -1,0 +1,161 @@
+name: Build and deploy Flutter apps
+
+on:
+  push:
+    branches:
+      - feature
+
+env:
+  CACHE_FLUTTER: true # specify whether flutter should be cached or not
+  BUILD_ANDROID: true # specify whether an android appbundle should be build or should be skipped
+  BUILD_IOS: true
+  BUILD_WEB: false
+  BUILD_WINDOWS: false
+  BUILD_LINUX: false
+  BUILD_MACOS: false
+  RELEASE: false
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: $env.CACHE_FLUTTER
+      - run: flutter --version # print flutter version
+
+      - name: Clean
+        run: flutter clean
+
+      - name: Install Packages / Dependencies
+        run: flutter pub get
+
+      - name: Analyze dart code
+        run: flutter analyze lib test
+
+      - name: Run tests including coverage
+        run: flutter test --no-pub --coverage test
+
+      - name: Build Linux
+        if: ${{ env.BUILD_LINUX == 'true'}}
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ninja-build libgtk-3-dev
+          flutter config --enable-linux-desktop
+          flutter build linux
+        continue-on-error: true
+      # TODO: Archive Linux
+
+      - name: Build Android Appbundle
+        if: ${{ env.BUILD_ANDROID == 'true'}}
+        run: flutter build apk --flavor app3 --release --no-pub
+
+      - name: Sign Android Appbundle
+        if: ${{ env.BUILD_ANDROID == 'true'}}
+        id: android_sign
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: build/app/outputs/flutter-apk/
+          signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
+          alias: ${{ secrets.ANDROID_ALIAS }}
+          keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: Archive Android Production Artifact
+        if: ${{ env.BUILD_ANDROID == 'true'}}
+        uses: actions/upload-artifact@master
+        with:
+            name: android
+            path: ${{ steps.android_sign.outputs.signedReleaseFile }}
+
+      - name: Build Web
+        if: ${{ env.BUILD_WEB == 'true'}}
+        run: |
+         flutter build web
+         cd build/web
+         zip -r web-app.zip .
+
+      - name: Archive Web Production Artifact
+        if: ${{ env.BUILD_WEB == 'true'}}
+        uses: actions/upload-artifact@master
+        with:
+            name: web
+            path: build/web
+
+
+  build-macos:
+    if: true
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: $env.CACHE_FLUTTER
+      - run: flutter --version # print flutter version
+
+      - name: Install Packages / Dependencies
+        run: flutter pub get
+
+      - name: Build iOS App
+        if: ${{ env.BUILD_IOS == 'true'}}
+        run: |
+            flutter build ios --no-codesign --flavor app3
+            cd build/ios/iphoneos
+            mkdir Payload
+            cd Payload
+            ln -s ../Runner.app
+            cd ..
+            zip -r app.ipa Payload
+
+      - name: Archive iOS Production Artifact
+        if: ${{ env.BUILD_IOS == 'true'}}
+        uses: actions/upload-artifact@master
+        with:
+          name: ios
+          path: build/ios/iphoneos/app.ipa
+
+      - name: Build MacOS
+        if: ${{ env.BUILD_MACOS == 'true'}}
+        run: |
+          flutter config --enable-macos-desktop
+          flutter build macos --release
+        continue-on-error: true
+      # TODO: Archive MacOS
+
+  build-windows:
+    if: false
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: $env.CACHE_FLUTTER
+      - run: flutter --version # print flutter version
+
+      - name: Install Packages / Dependencies
+        run: flutter pub get
+
+      - name: Build Windows
+        if: ${{ env.BUILD_WINDOWS == 'true'}}
+        run: |
+          flutter config --enable-windows-desktop
+          flutter build windows
+        continue-on-error: true
+      # TODO: Archive Windows
+
+
+  release:
+    if: false
+    needs: [build-macos, build-linux, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release Apps
+        if: ${{ env.RELEASE == 'true'}}
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: 'build/app/outputs/**/*.apk,build/ios/iphoneos/app.ipa,build/web/web-app.zip'
