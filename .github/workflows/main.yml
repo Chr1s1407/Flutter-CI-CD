@@ -101,3 +101,28 @@ jobs:
         with:
           name: ios
           path: build/ios/iphoneos/app.ipa
+
+    deploy-ios:
+      needs: [build-ios]
+      runs-on: macos-latest
+      steps:
+        - uses: actions/checkout@v2
+        - uses: subosito/flutter-action@v2
+          with:
+            channel: 'stable'
+            cache: $env.CACHE_FLUTTER
+        - run: flutter --version
+          # TODO: deploy ios to testflight
+
+    deploy-android:
+      needs: [build-android]
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - uses: subosito/flutter-action@v2
+          with:
+            channel: 'stable'
+            cache: $env.CACHE_FLUTTER
+        - run: flutter --version
+          # TODO: deploy android to google play store
+
