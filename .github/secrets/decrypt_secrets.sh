@@ -9,8 +9,8 @@ mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
 cp ./.github/secrets/Flutter_Pipeline_Demo.mobileprovision.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/Flutter_Pipeline_Demo.mobileprovision.mobileprovision
 
 
-security create-keychain -p "password" build.keychain
-security import ./.github/secrets/Certificate.p12 -t agg -k ~/Library/Keychains/build.keychain -P "password" -A
+security create-keychain -p "$IOS_KEYS" build.keychain
+security import ./.github/secrets/Certificate.p12 -t agg -k ~/Library/Keychains/build.keychain -P "$IOS_KEYS" -A
 
 security list-keychains -s ~/Library/Keychains/build.keychain
 security default-keychain -s ~/Library/Keychains/build.keychain
