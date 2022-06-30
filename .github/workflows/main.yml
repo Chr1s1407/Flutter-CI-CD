@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  APP_NAME: app3
+  APP_NAME: app1
   CACHE_FLUTTER: true
   BUILD_ANDROID: true
   BUILD_IOS: true
