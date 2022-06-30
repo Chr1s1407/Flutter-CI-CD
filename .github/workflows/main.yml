@@ -103,31 +103,13 @@ jobs:
           name: ios
           path: build/ios/iphoneos/app.ipa
 
-  deploy-ios:
-    needs: [build-ios]
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          cache: $env.CACHE_FLUTTER
-      - run: flutter --version
-
-
-      - uses: actions/download-artifact@v3
-        with:
-           name: app.ipa
-           path: build/ios/iphoneos
-
-      - name: 'Upload app to TestFlight'
+      - name: 'Deploy: Upload app to TestFlight'
         uses: apple-actions/upload-testflight-build@v1
         with:
           app-path: build/ios/iphoneos/app.ipa
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
-
 
   deploy-android:
     if: false
