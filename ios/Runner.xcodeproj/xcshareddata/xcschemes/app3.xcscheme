@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8368F3B627F5CFA700CDBA2A"
-               BuildableName = "Runner copy.app"
+               BuildableName = "SecondRunner.app"
                BlueprintName = "SecondRunner"
                ReferencedContainer = "container:Runner.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8368F3B627F5CFA700CDBA2A"
-            BuildableName = "Runner copy.app"
+            BuildableName = "SecondRunner.app"
             BlueprintName = "SecondRunner"
             ReferencedContainer = "container:Runner.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8368F3B627F5CFA700CDBA2A"
-            BuildableName = "Runner copy.app"
+            BuildableName = "SecondRunner.app"
             BlueprintName = "SecondRunner"
             ReferencedContainer = "container:Runner.xcodeproj">
          </BuildableReference>
