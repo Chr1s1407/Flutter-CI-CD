@@ -112,25 +112,15 @@ jobs:
           channel: 'stable'
           cache: $env.CACHE_FLUTTER
       - run: flutter --version
-      # TODO: check this
-      - name: Checkout repository
-        uses: actions/checkout@v1
-      - name: Install gpg
-        run: brew install gnupg
-      - name: Setup provisioning profile
-        env:
-          IOS_KEYS: ${{ secrets.IOS_KEYS }}
-        run: ./.github/secrets/decrypt_secrets.sh
 
+      - name: 'Upload app to TestFlight'
+        uses: apple-actions/upload-testflight-build@v1
+        with:
+          app-path: build/ios/iphoneos/app.ipa
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
 
-
-      - name: Publishing app
-        if: success()
-        env:
-          APPLEID_USERNAME: ${{ secrets.IOS_USERNAME }}
-          APPLEID_PASSWORD: ${{ secrets.IOS_PASSWORD }}
-        run: ./.github/scripts/publish_testflight.sh
-      # TODO: check this
 
   deploy-android:
     needs: [build-android]
