@@ -152,7 +152,7 @@ jobs:
           channel: 'stable'
           cache: $env.CACHE_FLUTTER
       - run: flutter --version
-        -
+
       - name: Create service_account.json
         id: createServiceAccount
         run: echo '${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON}}' > service_account.json
@@ -166,4 +166,4 @@ jobs:
           releaseFile: build/app/outputs/flutter-apk/app-app1-release.apk
           track: beta
           whatsNewDirectory: whatsnew/
-      # TODO
+      
