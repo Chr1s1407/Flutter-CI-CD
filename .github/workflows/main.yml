@@ -80,7 +80,7 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: service_account.json
-          packageName: com.package
+          packageName: com.example.myapp
           releaseFile: build/app/outputs/flutter-apk/app-app1-release.apk
           track: beta
 
