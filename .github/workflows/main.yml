@@ -35,7 +35,7 @@ jobs:
         run: flutter test --no-pub --coverage test
 
   build-android:
-    if: false
+    if: true
     needs: [test]
     runs-on: ubuntu-latest
     steps:
@@ -72,6 +72,7 @@ jobs:
             path: ${{ steps.android_sign.outputs.signedReleaseFile }}
 
   build-ios:
+    if: false
     needs: [test]
     runs-on: macos-latest
     steps:
@@ -141,7 +142,7 @@ jobs:
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
 
   deploy-android:
-    if: false
+    if: true
     needs: [build-android]
     runs-on: ubuntu-latest
     steps:
@@ -151,5 +152,15 @@ jobs:
           channel: 'stable'
           cache: $env.CACHE_FLUTTER
       - run: flutter --version
-        # TODO: deploy android to google play store
-
+      - name: Create service_account.json
+        id: createServiceAccount
+        run: echo '${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON}}' > service_account.json
+      - name: Deploy to Play Store (BETA)
+        id: deploy
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: service_account.json
+          packageName: com.package
+          releaseFile: build/app/outputs/flutter-apk/app-release.apk
+          track: beta
+          whatsNewDirectory: whatsnew/
