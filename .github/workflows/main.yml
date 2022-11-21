@@ -83,8 +83,6 @@ jobs:
           packageName: com.package
           releaseFile: build/app/outputs/flutter-apk/app-app1-release.apk
           track: beta
-          whatsNewDirectory: whatsnew/
-
 
   build-ios:
     if: false
