@@ -5,6 +5,11 @@ if (localPropertiesFile.exists()) {
         localProperties.load(reader)
     }
 }
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
 
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
@@ -43,18 +48,27 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.myapp"
+        applicationId "de.carsten_vogel.flutter.pipeline.demo"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 
@@ -65,19 +79,19 @@ android {
             dimension "app"
             resValue "string", "app_name", "Demo App Flavor1"
             versionNameSuffix "-App1"
-            applicationId "com.example.myapp.app1"
+            applicationId "de.carsten_vogel.flutter.pipeline.demo.app1"
         }
         app2 {
             dimension "app"
             resValue "string", "app_name", "Demo App Flavor2"
             versionNameSuffix "-App2"
-            applicationId "com.example.myapp.app2"
+            applicationId "de.carsten_vogel.flutter.pipeline.demo.app2"
         }
         app3 {
             dimension "app"
             resValue "string", "app_name", "Demo App Flavor3"
             versionNameSuffix "-App3"
-            applicationId "com.example.myapp.app3"
+            applicationId "de.carsten_vogel.flutter.pipeline.demo.app3"
         }
     }
 
