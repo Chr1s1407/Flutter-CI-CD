@@ -46,23 +46,28 @@ jobs:
           cache: $env.CACHE_FLUTTER
       - run: flutter --version
 
+      - name: Decrypt Android keys
+        run: sh ./.github/scripts/decrypt_android_secrets.sh
+        env:
+          ANDROID_KEYS_SECRET_PASSPHRASE: ${{ secrets.ANDROID_KEYS_SECRET_PASSPHRASE }}
+
       - name: Install Packages / Dependencies
         run: flutter pub get
 
       - name: Build Android Appbundle
         if: ${{ env.BUILD_ANDROID == 'true'}}
-        run: flutter build appbundle --flavor ${{ env.APP_NAME }} --release --no-pub --stacktrace
+        run: flutter build appbundle --flavor ${{ env.APP_NAME }} --release --no-pub
 
-      - name: Sign Android Appbundle
-        if: ${{ env.BUILD_ANDROID == 'true'}}
-        id: android_sign
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: build/app/outputs/bundle/
-          signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
-          alias: ${{ secrets.ANDROID_ALIAS }}
-          keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+      #- name: Sign Android Appbundle
+      #  if: ${{ env.BUILD_ANDROID == 'true'}}
+      #  id: android_sign
+      #  uses: r0adkll/sign-android-release@v1
+      #  with:
+      #    releaseDirectory: build/app/outputs/bundle/
+      #    signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
+      #    alias: ${{ secrets.ANDROID_ALIAS }}
+      #    keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
+      #    keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
       - name: Archive Android Production Artifact
         if: ${{ env.BUILD_ANDROID == 'true'}}
