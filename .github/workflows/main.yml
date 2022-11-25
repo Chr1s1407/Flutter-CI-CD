@@ -56,7 +56,7 @@ jobs:
 
       - name: Build Android Appbundle
         if: ${{ env.BUILD_ANDROID == 'true'}}
-        run: flutter build appbundle --flavor ${{ env.APP_NAME }} --release --no-pub --verbose
+        run: flutter build appbundle --flavor ${{ env.APP_NAME }} --release --no-pub
 
       #- name: Sign Android Appbundle
       #  if: ${{ env.BUILD_ANDROID == 'true'}}
