@@ -47,7 +47,7 @@ jobs:
       - run: flutter --version
 
       - name: Decrypt Android keys
-        run: sh ./.github/scripts/decrypt_android_secrets.sh
+        run: sh ./.github/scripts/decrypt_android.sh
         env:
           ANDROID_KEYS_SECRET_PASSPHRASE: ${{ secrets.ANDROID_KEYS_SECRET_PASSPHRASE }}
 
