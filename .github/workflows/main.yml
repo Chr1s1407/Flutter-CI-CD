@@ -88,6 +88,7 @@ jobs:
           packageName: de.carsten_vogel.flutter.pipeline.demo.app1
           releaseFile: build/app/outputs/bundle/app1Release/app-app1-release.aab
           track: internal
+          status: draft
 
   build-ios:
     if: false
