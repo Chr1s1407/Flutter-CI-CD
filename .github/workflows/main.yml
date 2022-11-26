@@ -53,11 +53,9 @@ jobs:
         run: flutter pub get
 
       - name: Build Android Appbundle
-        if: ${{ env.BUILD_ANDROID == 'true'}}
         run: flutter build appbundle --flavor ${{ env.APP_NAME }} --release --no-pub
 
       - name: Archive Android Production Artifact
-        if: ${{ env.BUILD_ANDROID == 'true'}}
         uses: actions/upload-artifact@master
         with:
             name: android
