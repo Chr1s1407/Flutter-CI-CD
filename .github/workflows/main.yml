@@ -35,7 +35,7 @@ jobs:
         run: flutter test --no-pub --coverage test
 
   build-android:
-    if: $env.BUILD_ANDROID
+    if: true
     needs: [test]
     runs-on: ubuntu-latest
     steps:
