@@ -22,20 +22,20 @@ jobs:
           cache: $env.CACHE_FLUTTER
       - run: flutter --version
 
-      - name: Clean
+      - name: Clean Project
         run: flutter clean
 
-      - name: Install Packages / Dependencies
+      - name: Install Packages and Dependencies
         run: flutter pub get
 
-      - name: Analyze dart code
+      - name: Analyze Dart Code
         run: flutter analyze lib test
 
-      - name: Run tests including coverage
+      - name: Run Tests Including Coverage
         run: flutter test --no-pub --coverage test
 
   build-android:
-    if: true
+    if: $env.BUILD_ANDROID
     needs: [test]
     runs-on: ubuntu-latest
     steps:
@@ -46,46 +46,35 @@ jobs:
           cache: $env.CACHE_FLUTTER
       - run: flutter --version
 
-      - name: Decrypt Android keys
+      - name: Decrypt Android Keys
         run: sh ./.github/scripts/decrypt_android.sh
         env:
           ANDROID_KEYS_ZIP_PASSPHRASE: ${{ secrets.ANDROID_KEYS_ZIP_PASSPHRASE }}
 
-      - name: Install Packages / Dependencies
+      - name: Install Packages and Dependencies
         run: flutter pub get
 
       - name: Build Android Appbundle
         if: ${{ env.BUILD_ANDROID == 'true'}}
         run: flutter build appbundle --flavor ${{ env.APP_NAME }} --release --no-pub
 
-      #- name: Sign Android Appbundle
-      #  if: ${{ env.BUILD_ANDROID == 'true'}}
-      #  id: android_sign
-      #  uses: r0adkll/sign-android-release@v1
-      #  with:
-      #    releaseDirectory: build/app/outputs/bundle/
-      #    signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
-      #    alias: ${{ secrets.ANDROID_ALIAS }}
-      #    keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
-      #    keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
-
       - name: Archive Android Production Artifact
         if: ${{ env.BUILD_ANDROID == 'true'}}
         uses: actions/upload-artifact@master
         with:
             name: android
-            path: build/app/outputs/bundle/app1Release/app-app1-release.aab  # ${{ steps.android_sign.outputs.signedReleaseFile }}
+            path: build/app/outputs/bundle/app1Release/app-app1-release.aab
 
-      - name: Create service_account.json
-        id: createServiceAccount
-        run: echo '${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON}}' > service_account.json
+      #- name: Create service_account.json
+      #  id: createServiceAccount
+      #  run: echo '${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON}}' > service_account.json
 
-      - name: Deploy to Play Store (BETA)
+      - name: Deploy to Play Store
         id: deploy
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJson: service_account.json
-          packageName: de.carsten_vogel.flutter.pipeline.demo.app1
+          serviceAccountJson: ../service_account_key.json
+          packageName: ${{ secrets.ANDROID_PACKAGE_NAME}}.${{ env.APP_NAME }}
           releaseFiles: build/app/outputs/bundle/app1Release/app-app1-release.aab
           track: internal
           status: draft
