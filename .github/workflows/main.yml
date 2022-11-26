@@ -61,10 +61,6 @@ jobs:
             name: android
             path: build/app/outputs/bundle/app1Release/app-app1-release.aab
 
-      #- name: Create service_account.json
-      #  id: createServiceAccount
-      #  run: echo '${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON}}' > service_account.json
-
       - name: Deploy to Play Store
         id: deploy
         uses: r0adkll/upload-google-play@v1
@@ -75,6 +71,7 @@ jobs:
           track: internal
           status: draft
 
+# TODO: 
   build-ios:
     if: false
     needs: [test]
