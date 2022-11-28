@@ -3,7 +3,7 @@ name: Continuous Practice Pipeline for Flutter
 on:
   push:
     branches:
-      - main
+      - release_app1
 
 env:
   APP_NAME: app1
@@ -59,7 +59,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
             name: android
-            path: build/app/outputs/bundle/app1Release/app-app1-release.aab
+            path: build/app/outputs/bundle/${{ env.APP_NAME }}Release/app-${{ env.APP_NAME }}-release.aab
 
       - name: Deploy to Play Store
         id: deploy
@@ -67,7 +67,7 @@ jobs:
         with:
           serviceAccountJson: ./android/service_account_key.json
           packageName: ${{ secrets.ANDROID_PACKAGE_NAME}}.${{ env.APP_NAME }}
-          releaseFiles: build/app/outputs/bundle/app1Release/app-app1-release.aab
+          releaseFiles: build/app/outputs/bundle/${{ env.APP_NAME }}Release/app-${{ env.APP_NAME }}-release.aab
           track: internal
           status: draft
 
