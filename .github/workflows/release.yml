@@ -4,13 +4,27 @@ on:
   push:
     branches:
       - release_app1
+      - release_app2
 
 env:
   APP_NAME: app1
   CACHE_FLUTTER: true
 
 jobs:
+  set-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Env to app1
+        if: endsWith(github.ref, '/release_app1')
+        run: |
+          echo "APP_NAME=app1" >> $GITHUB_ENV
+      - name: Set Env to app2
+        if: endsWith(github.ref, '/release_app2')
+        run: |
+          echo "APP_NAME=app2" >> $GITHUB_ENV
+
   test:
+    needs: [set-env]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -31,6 +45,12 @@ jobs:
 
       - name: Run Tests Including Coverage
         run: flutter test --no-pub --coverage test
+
+      - name: Archive Flutter Test Coverage
+        uses: actions/upload-artifact@master
+        with:
+          name: test-coverage
+          path: coverage/lcov.info
 
   build-android:
     if: true
