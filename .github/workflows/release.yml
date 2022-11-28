@@ -12,14 +12,16 @@ env:
 
 jobs:
   set-env:
-    - name: Set Env to app1
-      if: endsWith(github.ref, '/release_app1')
-      run: |
-        echo "APP_NAME=app1" >> $GITHUB_ENV
-    - name: Set Env to app2
-      if: endsWith(github.ref, '/release_app2')
-      run: |
-        echo "APP_NAME=app2" >> $GITHUB_ENV
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Env to app1
+        if: endsWith(github.ref, '/release_app1')
+        run: |
+          echo "APP_NAME=app1" >> $GITHUB_ENV
+      - name: Set Env to app2
+        if: endsWith(github.ref, '/release_app2')
+        run: |
+          echo "APP_NAME=app2" >> $GITHUB_ENV
 
   test:
     needs: [set-env]
