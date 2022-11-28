@@ -32,6 +32,12 @@ jobs:
       - name: Run Tests Including Coverage
         run: flutter test --no-pub --coverage test
 
+      - name: Archive Flutter Test Coverage
+        uses: actions/upload-artifact@master
+          with:
+            name: test-coverage
+            path: coverage/lcov.info
+
   build-android:
     if: true
     needs: [test]
