@@ -34,9 +34,9 @@ jobs:
 
       - name: Archive Flutter Test Coverage
         uses: actions/upload-artifact@master
-          with:
-            name: test-coverage
-            path: coverage/lcov.info
+        with:
+          name: test-coverage
+          path: coverage/lcov.info
 
   build-android:
     if: true
