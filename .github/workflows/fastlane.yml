@@ -87,7 +87,7 @@ jobs:
       - name: Create AppFile
         uses: "finnp/create-file-action@master"
         env:
-          FILE_NAME: "../android/fastlane/Appfile"
+          FILE_NAME: "./android/fastlane/Appfile"
           FILE_DATA: "json_key_file(\"service_account_key.json\")\npackage_name(\"${{ secrets.ANDROID_PACKAGE_NAME}}.${{ env.APP_NAME }}\")"
 
       - uses: maierj/fastlane-action@v3.0.0
