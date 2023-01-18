@@ -1,0 +1,102 @@
+name: Continuous Practice Pipeline for Flutter
+
+on:
+  push:
+    branches:
+      - fastlane
+
+env:
+  APP_NAME: app1
+  CACHE_FLUTTER: true
+
+jobs:
+  set-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Env to app1
+        if: endsWith(github.ref, '/release_app1')
+        run: |
+          echo "APP_NAME=app1" >> $GITHUB_ENV
+      - name: Set Env to app2
+        if: endsWith(github.ref, '/release_app2')
+        run: |
+          echo "APP_NAME=app2" >> $GITHUB_ENV
+      - name: Set Env to app2
+        if: endsWith(github.ref, '/fastlane')
+        run: |
+          echo "APP_NAME=app2" >> $GITHUB_ENV
+
+  test:
+    needs: [set-env]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: $env.CACHE_FLUTTER
+      - run: flutter --version
+
+      - name: Clean Project
+        run: flutter clean
+
+      - name: Install Packages and Dependencies
+        run: flutter pub get
+
+      - name: Analyze Dart Code
+        run: flutter analyze lib test
+
+      - name: Run Tests Including Coverage
+        run: flutter test --no-pub --coverage test
+
+      - name: Archive Flutter Test Coverage
+        uses: actions/upload-artifact@master
+        with:
+          name: test-coverage
+          path: coverage/lcov.info
+
+  build-android:
+    if: true
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: $env.CACHE_FLUTTER
+      - run: flutter --version
+
+      - name: Decrypt Android Keys
+        run: sh ./.github/scripts/decrypt_android.sh
+        env:
+          ANDROID_KEYS_ZIP_PASSPHRASE: ${{ secrets.ANDROID_KEYS_ZIP_PASSPHRASE }}
+
+      - name: Install Packages and Dependencies
+        run: flutter pub get
+
+      - name: Build Android Appbundle
+        run: flutter build appbundle --flavor ${{ env.APP_NAME }} --release --no-pub
+
+      - name: Archive Android Production Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: android
+          path: build/app/outputs/bundle/${{ env.APP_NAME }}Release/app-${{ env.APP_NAME }}-release.aab
+
+      - name: Install FastLine
+        run: gem install fastlane
+
+      - name: Create AppFile
+        uses: "finnp/create-file-action@master"
+          env:
+            FILE_NAME: "../android/fastlane/Appfile"
+            FILE_DATA: "json_key_file(\"service_account_key.json\")\npackage_name(\"${{ secrets.ANDROID_PACKAGE_NAME}}.${{ env.APP_NAME }}\")"
+
+      - name: Deploy to Play Store
+        run: fastlane supply |
+          --aab build/app/outputs/bundle/${{ env.APP_NAME }}Release/app-${{ env.APP_NAME }}-release.aab |
+          --track internal |
+          --release_status draft |
+          --package_name ${{ secrets.ANDROID_PACKAGE_NAME}}.${{ env.APP_NAME }} |
+          --json_key ./android/service_account_key.json
