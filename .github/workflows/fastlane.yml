@@ -98,4 +98,4 @@ jobs:
         with:
           lane: 'deploy'
           subdirectory: 'android'
-          options: '{ "aab": "../build/app/outputs/bundle/${{ env.APP_NAME }}Release/app-${{ env.APP_NAME }}-release.aab", "track": "internal", "release_status": "draft", "package_name": "${{ secrets.ANDROID_PACKAGE_NAME}}.${{ env.APP_NAME }}", "json_key": "./android/service_account_key.json" }'
+          options: '{ "aab": "../build/app/outputs/bundle/${{ env.APP_NAME }}Release/app-${{ env.APP_NAME }}-release.aab", "track": "internal", "release_status": "draft", "package_name": "${{ secrets.ANDROID_PACKAGE_NAME}}.${{ env.APP_NAME }}", "json_key": "service_account_key.json" }'
