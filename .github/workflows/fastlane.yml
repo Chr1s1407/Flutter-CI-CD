@@ -75,11 +75,6 @@ jobs:
       - name: Install Packages and Dependencies
         run: flutter pub get
 
-      - name: Incremet Patch Number
-        run: flutter version --patch
-      - name: Incremet Build Number
-        run: flutter version --build_number 
-
       - name: Build Android Appbundle
         run: flutter build appbundle --flavor ${{ env.APP_NAME }} --release --no-pub
 
