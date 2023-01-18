@@ -90,6 +90,10 @@ jobs:
           FILE_NAME: "./android/fastlane/Appfile"
           FILE_DATA: "json_key_file(\"service_account_key.json\")\npackage_name(\"${{ secrets.ANDROID_PACKAGE_NAME}}.${{ env.APP_NAME }}\")"
 
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+          bundler-cache: true
       - uses: maierj/fastlane-action@v3.0.0
         with:
           lane: 'deploy'
