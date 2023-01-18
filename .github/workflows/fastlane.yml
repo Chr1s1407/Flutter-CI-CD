@@ -75,6 +75,11 @@ jobs:
       - name: Install Packages and Dependencies
         run: flutter pub get
 
+      - name: Incremet Patch Number
+        run: flutter version --patch
+      - name: Incremet Build Number
+        run: flutter version --build_number 
+
       - name: Build Android Appbundle
         run: flutter build appbundle --flavor ${{ env.APP_NAME }} --release --no-pub
 
@@ -84,17 +89,14 @@ jobs:
           name: android
           path: build/app/outputs/bundle/${{ env.APP_NAME }}Release/app-${{ env.APP_NAME }}-release.aab
 
-      #- name: Create AppFile
-      #  uses: "finnp/create-file-action@master"
-      #  env:
-       #   FILE_NAME: "./android/fastlane/Appfile"
-      #    FILE_DATA: 'json_key_file("service_account_key.json")'
-
-      - uses: ruby/setup-ruby@v1
+      - name: Setup Ruby for Fastlane
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.6.6'
           bundler-cache: true
-      - uses: maierj/fastlane-action@v3.0.0
+
+      - name: Deploy to Google Play Console
+        uses: maierj/fastlane-action@v3.0.0
         with:
           lane: 'deploy'
           subdirectory: 'android'
