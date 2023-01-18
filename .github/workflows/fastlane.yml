@@ -92,7 +92,7 @@ jobs:
           env:
             FILE_NAME: "../android/fastlane/Appfile"
             FILE_DATA: "json_key_file(\"service_account_key.json\")\npackage_name(\"${{ secrets.ANDROID_PACKAGE_NAME}}.${{ env.APP_NAME }}\")"
-            
+
       - name: Deploy to Play Store
         run: fastlane supply |
           --aab build/app/outputs/bundle/${{ env.APP_NAME }}Release/app-${{ env.APP_NAME }}-release.aab |
