@@ -84,19 +84,14 @@ jobs:
           name: android
           path: build/app/outputs/bundle/${{ env.APP_NAME }}Release/app-${{ env.APP_NAME }}-release.aab
 
-      - name: Install FastLine
-        run: gem install fastlane
-
       - name: Create AppFile
         uses: "finnp/create-file-action@master"
           env:
             FILE_NAME: "../android/fastlane/Appfile"
             FILE_DATA: "json_key_file(\"service_account_key.json\")\npackage_name(\"${{ secrets.ANDROID_PACKAGE_NAME}}.${{ env.APP_NAME }}\")"
 
-      - name: Deploy to Play Store
-        run: fastlane supply |
-          --aab build/app/outputs/bundle/${{ env.APP_NAME }}Release/app-${{ env.APP_NAME }}-release.aab |
-          --track internal |
-          --release_status draft |
-          --package_name ${{ secrets.ANDROID_PACKAGE_NAME}}.${{ env.APP_NAME }} |
-          --json_key ./android/service_account_key.json
+      - uses: maierj/fastlane-action@v3.0.0
+        with:
+          lane: 'deploy'
+          subdirectory: 'android'
+          options: '{ "aab": "build/app/outputs/bundle/${{ env.APP_NAME }}Release/app-${{ env.APP_NAME }}-release.aab", "track": "internal", "release_status": "draft", "package_name": "${{ secrets.ANDROID_PACKAGE_NAME}}.${{ env.APP_NAME }}", "json_key": "./android/service_account_key.json" }'

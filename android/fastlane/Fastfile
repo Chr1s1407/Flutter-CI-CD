@@ -31,8 +31,7 @@ platform :android do
   end
 
   desc "Deploy a new version to the Google Play"
-  lane :deploy do
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store
+  lane :deploy do |options|
+    upload_to_play_store --aab options[:aab] --track options[:track] --release_status options[:release_status] --package_name options[:package_name] --json_key options[:json_key]
   end
 end
