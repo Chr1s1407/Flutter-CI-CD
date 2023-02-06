@@ -23,5 +23,12 @@ void main() {
 
       expect(counter.value, -1);
     });
+
+    test('value should not change at all', () {
+      final counter = Counter();
+      counter.doNothing();
+
+      expect(counter.value, 0);
+    });
   });
 }
