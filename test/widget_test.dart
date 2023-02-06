@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:myapp/main.dart';
 
@@ -19,11 +17,5 @@ void main() {
     // verify that the Text widgets appear exactly once in the widget tree.
     expect(titleFinder, findsOneWidget);
     expect(messageFinder, findsOneWidget);
-
-    doNothing();
   });
-}
-
-void doNothing() {
-  sleep(Duration(days:0, hours:0, minutes:0, seconds: 2, milliseconds: 0, microseconds: 0));
 }
