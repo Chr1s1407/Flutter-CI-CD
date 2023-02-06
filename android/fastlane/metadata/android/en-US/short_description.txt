@@ -1,1 +1,1 @@
-Short description for demo app.
+Short description for demo app using fastlane.
