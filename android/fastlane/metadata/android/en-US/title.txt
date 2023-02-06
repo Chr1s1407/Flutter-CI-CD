@@ -1,1 +1,1 @@
-Flutter Pipeline Demo App2
+Flutter Pipeline Fastlane Demo App2
