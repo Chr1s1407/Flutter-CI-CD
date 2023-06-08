@@ -51,7 +51,8 @@ jobs:
         run: flutter test --update-goldens
 
       - name: Copy Images
-        run: cp ./lib/test/goldens/*android* ./android/fastlane/metadata/android/en-US/images/phoneScreenshots
+        run: ls -1 /home/runner/work/Flutter-CI-CD/Flutter-CI-CD/test/goldens/*android*.png |
+          xargs -L1 -I{} cp {} ./android/fastlane/metadata/android/en-US/images/phoneScreenshots
 
       - name: Run Tests Including Coverage
         run: flutter test --no-pub --coverage test
