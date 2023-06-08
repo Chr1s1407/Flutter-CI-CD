@@ -81,6 +81,10 @@ jobs:
       - name: Create Goldens
         run: flutter test --update-goldens
 
+      - name: Copy Images
+        run: ls -1 /home/runner/work/Flutter-CI-CD/Flutter-CI-CD/test/goldens/*android*.png |
+          xargs -L1 -I{} cp {} ./android/fastlane/metadata/android/en-US/images/phoneScreenshots
+
       - name: List images
         run: ls ./android/fastlane/metadata/android/en-US/images/phoneScreenshots
 
