@@ -78,6 +78,9 @@ jobs:
           cache: $env.CACHE_FLUTTER
       - run: flutter --version
 
+      - name: List images
+        run: ls ./android/fastlane/metadata/android/en-US/images/phoneScreenshots
+
       - name: Decrypt Android Keys
         run: sh ./.github/scripts/decrypt_android.sh
         env:
